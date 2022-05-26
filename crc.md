@@ -3,9 +3,9 @@
 ```
 usage: crc.py -k Integer -n Integer
 Options and arguments:
--k              : width of valid data to be verified
--n              : Full frame length including check CRC digit
--h(--help)      : get help
+        -k              : width of valid data to be verified
+        -n              : Full frame length including check CRC digit
+        -h --help       : get help
 ```
 使用命令
 ```

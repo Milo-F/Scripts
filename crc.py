@@ -5,6 +5,10 @@ import getopt
 def crc_gen(argv):
     k = 0 # 有效数据宽度
     n = 0 # 加上校验位之后的总长度
+    if len(argv) == 0:
+        print("Error: miss parameters!")
+        print("Format: crc.py -k Integer -n Integer")
+        sys.exit()
     try:
         opts, args = getopt.getopt(argv, "hk:n:", ["help"])
     except:
@@ -15,9 +19,9 @@ def crc_gen(argv):
         if opt in ("-h", "--help"):
             print('usage: crc.py -k Integer -n Integer')
             print("Options and arguments:")
-            print("-k\t\t: width of valid data to be verified")
-            print("-n\t\t: Full frame length including check CRC digit")
-            print("-h(--help) \t: get help")
+            print("\t-k\t\t: width of valid data to be verified")
+            print("\t-n\t\t: Full frame length including check CRC digit")
+            print("\t-h --help \t: get help")
             sys.exit()
         else:
             try:
@@ -32,7 +36,16 @@ def crc_gen(argv):
             else:
                 print('crc.py -k Integer -n Integer')
                 sys.exit()
+    if k==0:
+        print ("Error: paramenter k cannot be zero or without input!")
+        sys.exit()
+    if n==0:
+        print ("Error: paramenter n cannot be zero or without input!")
+        sys.exit()
     x = n-k+1
+    if x <= 1:
+        print ("Error: paramenter n must be greater than k!")
+        sys.exit()
     with open("crc_verilog.txt", "w") as f: 
         # crc多项式
         f.writelines("// 将 #You CRC# 替换你的crc多项式\n")
