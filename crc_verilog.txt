@@ -6,7 +6,7 @@ wire [2:0] crc_out;
 wire [3:0] crc_0, crc_1, crc_2, crc_3, crc_4;
 
 // logic assign
-assign crc_0 = data[7:4] ^ (data[39] ? crc_num : 4'b0);
+assign crc_0 = data[7:4] ^ (data[7] ? crc_num : 4'b0);
 assign crc_1 = {crc_0[2:0], data[3]} ^ (crc_0[2] ? crc_num : 4'b0);
 assign crc_2 = {crc_1[2:0], data[2]} ^ (crc_1[2] ? crc_num : 4'b0);
 assign crc_3 = {crc_2[2:0], data[1]} ^ (crc_2[2] ? crc_num : 4'b0);

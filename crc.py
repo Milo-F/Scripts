@@ -48,7 +48,7 @@ def crc_gen(argv):
         f.writelines(code+";\n")
         # assign 语句
         f.writelines("\n// logic assign\n")
-        code = "assign " + "crc_{} ".format(0) + "= " + "data[{}:{}] ".format(n-1, n-x) + "^ (data[39] ? crc_num : {}'b0)".format(x) + ";\n"
+        code = "assign " + "crc_{} ".format(0) + "= " + "data[{}:{}] ".format(n-1, n-x) + "^ (data[{}] ? crc_num : {}'b0)".format(n-1,x) + ";\n"
         f.writelines(code)
         for i in range(1, n-x+1):
             code = "assign " + "crc_{} ".format(i) + "= " + "{" + "crc_{}[{}:0], data[{}]".format(i-1, x-2, n-x-i) + "} " + "^ (crc_{}[{}] ? crc_num : {}'b0)".format(i-1, x-2, x) + ";\n"
