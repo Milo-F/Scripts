@@ -3,9 +3,12 @@
 import sys
 import time
 import os
+# 从运行参数获取文件名
 file_name = sys.argv[1]
 info_dic = {}
+# 文件名
 info_dic['file_name'] = file_name
+
 print('author: ')
 name = input()
 info_dic['name'] = name if name != '' else 'null'
