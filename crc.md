@@ -7,6 +7,7 @@ Options and arguments:
         -n              : Full frame length including check CRC digit
         -h --help       : get help
 ```
+## Example
 使用命令
 ```
 ./crc.py -k 5 -n 8

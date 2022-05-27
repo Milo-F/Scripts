@@ -1,0 +1,9 @@
+crc #(
+	.A(),
+	.B()
+) crc_inst_0 (
+	.clk(),
+	.rst_n(),
+	.data_in(),
+	.data_out()
+);

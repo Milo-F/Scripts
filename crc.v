@@ -1,4 +1,7 @@
-module crc (
+module crc #(
+    A=7,
+    B=9
+)(
     input       wire                                        clk,
     input       wire                                        rst_n,
     input       wire        [31:0]                          data_in,
