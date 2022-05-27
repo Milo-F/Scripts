@@ -1,83 +1,84 @@
 #! /usr/bin/python3
-
-from distutils import filelist
-from fileinput import filename
-import os
+# -*- coding: utf-8 -*-
 import re
 import sys, getopt
-from venv import create
-# dir_path = './'
-# file_name = sys.argv[1]
-# print(file_name)
-# # file_list = os.listdir(dir_path)
-# with open(file_name, 'r') as f:
-#     f_content = f.read()
-# ano = re.findall(r' *//.*\n', f_content)
-# # print(ano)
-# for str in ano:
-#     f_content = f_content.replace(str.replace('\n',''), '')
-# first_p = f_content.find('module')+6
-# end_p = f_content.find(';')+1
-# f_content = f_content[first_p:end_p]
-# # print(f_content)
-# for i in range(0,len(f_content)):
-#     if f_content[i] != ' ':
-#         first_p = i
-#         break
-#     i += 1
-# f_content = f_content[first_p:end_p]
-# have_para = True if (f_content.find(')') < f_content.find('input') or f_content.find(')') < f_content.find('output')) else False
-# f_list = list(f_content)
-# # print(have_para)
-# # print(f_content)
-# if not have_para :
-#     ins_name_p = f_content.find('(')
-#     mod_name = f_content[0:ins_name_p].replace(' ','')
-#     ins_name = mod_name+'_ins '
-#     f_list.insert(ins_name_p, ins_name)
-# else:
-#     ins_name_p = f_content.find('#')
-#     mod_name = f_content[0:ins_name_p].replace(' ','')
-#     ins_name = mod_name+'_ins '
-#     index = f_content.find(')')+f_content[f_content.find(')'):].find('(')
-#     f_list.insert(index, ins_name)
-# f_content = ''.join(f_list)
-# print(f_content)
-# f_content = re.sub(r'\B ?inout *(?:wire|reg)? *(?:\[.*\])? *|\B ?output *(?:wire|reg)? *(?:\[.*\])? *|\B ?input *(?:wire)? *(?:\[.*\])? *','.',f_content)
-# port_name = re.findall(r'\B\..*,?', f_content)
-# print(port_name[-6])
-# for str in port_name:
-#     name = str.replace('.','').replace(',','')
-#     end_dot = ',' if str.find(',') >0 else ''
-#     f_content = f_content.replace(str, ' '+str.replace(',', '')+'('+name+')'+end_dot)
-# print(file_name.replace('.v', '_ins.v'))
-# os.system('touch '+file_name.replace('.v', '_ins.v'))
-# with open(file_name.replace('.v', '_ins.v'), 'w') as f:
-#     f.write(f_content)
-#     pass
+
+def get_help():
+    print("usage: create_ins.py -f file_name <-o out_file> <-i ins_name>")
+    print("Options and arguments:")
+    print("\t-f --file_name=\t: input verilog file with one module inside")
+    print("\t-o --out_file=\t: instance code output file")
+    print("\t-i --ins_name=\t: input a instance name you want")
+    print("\t-h --help=\t: get help")
+    sys.exit()
 
 def create_ins(argv):
+    module_name = "" # 模块名字
+    ins_name = "" # 实例名字
+    given_ins_name = False # 是否指定了实例名字
+    module_def = "" # 模块定义语句块
+    params_def = "" # 参数定义语句块
+    ports_def = "" # 端口定义语句块
+    param_exist = False # 是否是参数化的模块
+    output_list = [] # 输出实例调用
+    param_list = [] # 参数名列表
+    ports_list = [] # 端口名列表
     if len(argv) == 0:
         print("Error: missing parameters!")
         sys.exit()
     try:
-        opts, args = getopt.getopt(argv, "hf:o:", ["help", "file_name", "out_file"])
+        opts, args = getopt.getopt(argv, "hf:o:i:", ["help", "file_name=", "out_file=", "ins_name="])
     except:
         print("Error: get parameters error!")
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print("usage: create_ins.py -f file_name <-o out_file>")
-            print("Options and arguments:")
-            print("\t-f --file_name\t: input verilog file with one module inside")
-            print("\t-o --out_file\t: instance code output file")
-            print("\t-h --help\t: get help")
-        
+            get_help()
+
         if opt in ("-f", "--file_name"):
-            pass
-
+            input_file = arg
+        output_file = input_file.replace(".v", ".inst")
         if opt in ("-o", "--out_file"):
+            output_file = arg
+        if opt in ("-i", "--ins_name") :
+            given_ins_name = True
+            ins_name = arg
+
+    with open(input_file, "r") as f:
+        # 提取module name
+        for line in f.readlines():
+            line = line.strip()
+            # 判断参数是否存在
+            if re.compile(r"#").search(line):
+                param_exist = True
+            # 包含关键字module
+            if re.compile(r"\bmodule\b").search(line):
+                # 包含"("或者"#("
+                if re.compile(r"[#]?\(").search(line):
+                    module_def = re.search(r"\Amodule\b *\w*\b", line).group()
+                    break
+                else:    
+                    module_def = module_def + line
+            else:
+                if re.compile(r"[#]?\(").search(line):
+                    if re.compile(r"\w*").search(line):
+                        module_def = module_def + " " + re.search(r"\w*", line).group()
+                    break
+                else:
+                    module_def = module_def + " " + line
+        module_name = re.search(r"\b\w*\b\Z", module_def).group()
+        if not given_ins_name:
+            ins_name = module_name + "_ins"
+        print(ins_name)
+
+        # 提取参数列表
+        print (param_exist)
+        if param_exist:
             pass
 
+
+        f.close()
+
+# mian
 if __name__ == "__main__":
     create_ins(sys.argv[1:])
