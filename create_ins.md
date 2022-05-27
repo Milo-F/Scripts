@@ -17,7 +17,7 @@ Options and arguments:
 ```
 ./creat_ins.py -f crc.v -o crc.inst -i crc_inst_0
 ```
-生成crc模块的名为crc_inst_0的实例，并输出到[crc.inst](./crc.inst)文件中。生成的实例代码如下：
+生成[crc](./crc.v)模块的名为crc_inst_0的实例，并输出到[crc.inst](./crc.inst)文件中。生成的实例代码如下：
 ```
 crc #(
 	.A(),
