@@ -1,7 +1,6 @@
 crc #(
-	.A(),
-	.B()
-) crc_inst_0 (
+	.A()
+) crc_ins (
 	.clk(),
 	.rst_n(),
 	.data_in(),

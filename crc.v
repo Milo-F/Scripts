@@ -1,6 +1,5 @@
 module crc #(
-    A=7,
-    B=9
+    A=7
 )(
     input       wire                                        clk,
     input       wire                                        rst_n,
